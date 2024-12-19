@@ -3,222 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathRush - Latih Skill Menghitung</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="src/Mathzw.svg">
+    <title>MathRush - Tes Kemampuan Menghitungmu</title>
+    <script src="script.js"></script>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --background-color: #f4f6f7;
-            --text-color: #2c3e50;
-            --warning-color: #f39c12;
+    :root {
+        --primary-color: #6a11cb;
+        --secondary-color: #2575fc;
+        --background-color: #f4f6fd;
+        --text-color: #3c007d;
+        --glass-background: rgba(255, 255, 255, 0.5);
+        --glass-blur: 15px;
+        --hover-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: var(--text-color);
+        overflow-x: hidden;
+        padding: 20px;
+    }
+    
+    .game-container {
+        background: var(--glass-background);
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.17);
+        padding: 40px;
+        width: 100%;
+        max-width: 500px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .difficulty-selector {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        gap: 15px;
+    }
+    
+    .difficulty-btn {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+    }
+    
+    .difficulty-btn:hover {
+        transform: scale(1.05);
+    }
+    
+    .difficulty-btn.active {
+        background-color: rgba(255, 255, 255, 0.8);
+        color: var(--primary-color);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    #problem {
+        font-size: 2.5em;
+        margin: 30px 0;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        word-break: break-all;
+        text-align: center;
+    }
+    
+    #answer-input {
+        width: 100%;
+        padding: 15px;
+        margin: 20px 0;
+        border: none;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 1.2em;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    #answer-input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    #answer-input:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn {
+        flex: 1;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 100px;
+        margin: 5px;
+    }
+    
+    .btn:hover {
+        transform: scale(1.05);
+        background-color: var(--hover-color);
+    }
+    
+    #feedback {
+        margin: 20px 0;
+        font-weight: 600;
+        color: white;
+        text-shadow: 1px 1px 2 px rgba(0,0,0,0.3);
+        text-align: center;
+    }
+    
+    .game-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 10px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        flex: 1;
+        text-align: center;
+        min-width: 120px;
+    }
+    
+    #score-history {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .score-entry {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .score-entry:last-child {
+        border-bottom: none;
+    }
+    
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+    
+    .modal-container {
+        background: var(--glass-background);
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    #mute-btn {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+    }
+    
+    /* Scrollbar Styling */
+    #score-history::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    #score-history::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+    
+    #score-history::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+    }
+    
+    /* Responsiveness Adjustments */
+    @media screen and (max-width: 600px) {
+        .game-container {
+            padding: 20px;
+            margin: 0;
+            width: 100%;
+            max-width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    
+        .difficulty-selector {
+            gap: 10px;
+        }
+    
+        .difficulty-btn {
+            padding: 10px 15px;
+            font-size: 0.9em;
+        }
+    
+        #problem {
+            font-size: 2em;
+        }
+    
+        .btn {
+            padding: 12px 20px;
+            font-size: 0.9em;
+        }
+    
+        .game-stats {
+            flex-direction: column;
+        }
+    
+        .stat-item {
+            min-width: 100%;
+        }
+    }
+    
+    @media screen and (max-height: 700px) {
+        .game-container {
+            padding: 20px;
+        }
+    
+        #problem {
+            margin: 20px 0;
+            font-size: 2em;
+        }
+    
+        .difficulty-selector {
+            margin-bottom: 20px;
+        }
+    }
+    :root {
+            /* Modern Glass Color Palette */
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --glass-background: rgba(255, 255, 255, 0.1);
+            --glass-blur: 15px;
+            --border-color: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                135deg, 
+                var(--primary-color), 
+                var(--secondary-color)
+            );
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: var(--text-color);
-        }
-        .game-container {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 40px;
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .game-stats {
-            display: flex;
-            gap: 20px;
-        }
-
-        .stat-item {
-            background-color: var(--background-color);
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        #problem {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        #answer-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            border: 2px solid var(--primary-color);
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 10px;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            background-color: #2980b9;
-        }
-
-        #feedback {
-            margin-top: 20px;
-            font-weight: 600;
-            height: 30px;
-        }
-
-        .correct {
-            color: var(--secondary-color);
-        }
-
-        .incorrect {
-            color: #e74c3c;
-        }
-
-        .score-history {
-            margin-top: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: var(--background-color);
-            border-radius: 10px;
-            padding: 15px;
-        }
-
-        .score-entry {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .score-entry:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 600px) {
-            .game-container {
-                width: 90%;
-                padding: 20px;
-            }
-
-            #problem {
-                font-size: 2rem;
-            }
-        }
-        /* Modal Styles */
-        .modal-overlay {
+        /* Layered Background Particles */
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            background: 
+                radial-gradient(
+                    circle at 30% 80%, 
+                    rgba(106, 17, 203, 0.2) 0%, 
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 70% 20%, 
+                    rgba(37, 117, 252, 0.2) 0%, 
+                    transparent 50%
+                );
+            z-index: -1;
         }
 
-        .modal-container {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
-            padding: 30px;
-            width: 90%;
+        .game-container {
+            width: 100%;
             max-width: 500px;
-            text-align: center;
-            transform: scale(0.7);
-            opacity: 0;
+            background: var(--glass-background);
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: 30px;
+            border: 2px solid var(--border-color);
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.1),
+                0 10px 20px rgba(0,0,0,0.05);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            transform: rotateX(10deg) scale(0.95);
+        }
+
+        .game-container:hover {
+            transform: rotateX(0) scale(1);
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.15),
+                0 15px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Glass Layer Overlay */
+        .game-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(
+                    45deg, 
+                    rgba(255,255,255,0.1), 
+                    transparent 40%
+                );
+            transform: rotate(-45deg);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: var(--text-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .modal-container.show {
-            transform: scale(1);
-            opacity: 1;
+        .difficulty-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.05);
         }
 
-        .modal-header {
-            margin-bottom: 20px;
+        .difficulty-btn.active {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
         }
 
-        .modal-header h2 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
+        #problem {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 30px 0;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
         }
 
-        .modal-actions {
+        #answer-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            color: var(--text-color);
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .btn-group {
             display: flex;
             justify-content: center;
             gap: 20px;
             margin-top: 30px;
         }
 
-        .modal-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
+        .btn {
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            color: var(--text-color);
+            font-weight: 700;
+            text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .modal-btn-cancel {
-            background-color: #e0e0e0;
-            color: var(--text-color);
-        }
-
-        .modal-btn-confirm {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .modal-btn:hover {
+        .btn:hover {
+            background: rgba(255,255,255,0.2);
             transform: scale(1.05);
-            opacity: 0.9;
         }
+
+        @media screen and (max-width: 600px) {
+            .game-container {
+                margin: 0;
+                width: 95%;
+                padding: 20px;
+                transform: none;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+        }
+        
     </style>
 </head>
 <body>
     <div class="game-container">
-        
+        <!-- Audio Elements -->
         <audio id="correctSound" src="src/mixkit-winning-a-coin-video-game-2069.wav"></audio>
         <audio id="incorrectSound" src="src/mixkit-robot-system-fail-2960.wav"></audio>
         <audio id="gameStartSound" src="src/mixkit-to-the-next-round-1047.mp3"></audio>
         <audio id="gameEndSound" src="src/mixkit-game-level-completed-2059.wav"></audio>
-        <!-- Mute Button -->
+
+        <!-- Difficulty Selector -->
+        <div class="difficulty-selector">
+            <button class="difficulty-btn" data-difficulty="easy">Mudah</button>
+            <button class="difficulty-btn active" data-difficulty="medium">Sedang</button>
+            <button class="difficulty-btn" data-difficulty="hard">Sulit</button>
+        </div>
+
         <button id="mute-btn" class="btn">Mute</button>
+
         <div class="game-header">
             <div class="game-stats">
                 <div class="stat-item" id="timer">Waktu: 60</div>
@@ -226,13 +509,12 @@
             </div>
         </div>
 
-        <div id="problem">-</div>
+        <div id="problem">MATHZ RUSH</div>
         
         <input 
             type="number" 
             id="answer-input" 
-            placeholder="Masukkan jawaban" 
-            onkeypress="handleEnter(event)"
+            placeholder="Masukkan jawaban"
         >
         
         <div>
@@ -247,432 +529,448 @@
         <div id="score-history" class="score-history" style="display:none;">
             <h3>Riwayat Skor</h3>
             <div id="score-list"></div>
+            <button class="btn" onclick="clearScoreHistory()">Hapus Riwayat</button>
         </div>
     </div>
+
     <!-- Modal Konfirmasi Reset -->
     <div id="resetModal" class="modal-overlay">
         <div class="modal-container">
-            <div class="modal-header">
-                <h2>Reset Permainan</h2>
-            </div>
-            <div class="modal-content">
-                <p>Apakah Anda yakin ingin mereset permainan?</p>
-                <p>Skor saat ini akan hilang.</p>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-cancel" onclick="closeResetModal()">Batal</button>
-                <button class="modal-btn modal-btn-confirm" onclick="confirmReset()">Reset</button>
-            </div>
-        
+            <h3>Apakah Anda yakin ingin mereset permainan?</h3>
+            <button class="btn" onclick="confirmReset()">Ya</button>
+            <button class="btn" onclick="closeResetModal()">Tidak</button>
         </div>
-        
-        
     </div>
-    <script>// Game State and Configuration// Game Configuration
-        const GAME_CONFIG = {
-            INITIAL_TIME: 60,
-            MAX_ATTEMPTS: 3,
-            DIFFICULTY_SCALING: 5,
-            MAX_SCORE_HISTORY: 10
-        };
-        
-        // Game State Enum
-        const GameState = {
-            IDLE: 'idle',
-            RUNNING: 'running',
-            ENDED: 'ended'
-        };
-        
-        // Main Game Manager
-        class MathRushGame {
-            constructor() {
-                // Game State Variables
-                this.state = GameState.IDLE;
-                this.time = GAME_CONFIG.INITIAL_TIME;
-                this.score = 0;
-                this.currentProblem = null;
-                this.gameTimer = null;
-                this.attempts = 0;
-                this.scoreHistory = [];
-                this.isMuted = false;
-        
-                // UI Elements
-                this.elements = {
-                    problem: document.getElementById('problem'),
-                    answerInput: document.getElementById('answer-input'),
-                    timer: document.getElementById('timer'),
-                    scoreDisplay: document.getElementById('score'),
-                    feedback: document.getElementById('feedback'),
-                    resetModal: document.getElementById('resetModal'),
-                    scoreHistory: document.getElementById('score-history'),
-                    scoreList: document.getElementById('score-list'),
-                    muteButton: document.getElementById('mute-btn')
-                };
-        
-                // Sound Elements
-                this.sounds = {
-                    correct: document.getElementById('correctSound'),
-                    incorrect: document.getElementById('incorrectSound'),
-                    gameStart: document.getElementById('gameStartSound'),
-                    gameEnd: document.getElementById('gameEndSound')
-                };
-        
-                // Bind methods to maintain context
-                this.initializeGame = this.initializeGame.bind(this);
-                this.startGame = this.startGame.bind(this);
-                this.checkAnswer = this.checkAnswer.bind(this);
-                this.resetGame = this.resetGame.bind(this);
-                this.toggleMute = this.toggleMute.bind(this);
-        
-                // Initialize game
-                this.initializeGame();
-            }
-        
-            // Initialize Game Setup
-            initializeGame() {
-                // Load score history from localStorage
-                this.loadScoreHistory();
-        
-                // Set up sound volumes
-                Object.values(this.sounds).forEach(sound => {
-                    if (sound) sound.volume = 0.5;
+    
+    <script>
+    // Game Configuration
+    const GAME_CONFIG = {
+        INITIAL_TIME: 60,
+        MAX_ATTEMPTS: 3,
+        DIFFICULTY_SCALING: 5,
+        MAX_SCORE_HISTORY: 10,
+        STREAK_BONUS_THRESHOLD: 3,  // Number of consecutive correct answers for bonus
+        STREAK_BONUS_MULTIPLIER: 2, // Bonus points multiplier
+        MAX_STREAK_MULTIPLIER: 4
+    
+    };
+
+    // Game State Enum
+    const GameState = {
+        IDLE: 'idle',
+        RUNNING: 'running',
+        ENDED: 'ended'
+    };
+
+    // Difficulty Configurations
+    const DIFFICULTY_CONFIG = {
+        easy: { 
+            operations: ['+', '-'], 
+            maxNumber: 10,
+            timeLimit: 90, 
+            streakBonus: 1.5
+        },
+        medium: { 
+            operations: ['+', '-', 'x'], 
+            maxNumber: 20,
+            timeLimit: 60,
+            streakBonus: 2
+        },
+        hard: { 
+            operations: ['+', '-', 'x', '÷'], 
+            maxNumber: 50,
+            timeLimit: 45,
+            streakBonus: 2.5 
+        }
+    };
+
+    class MathRushGame {
+        constructor() {
+            this.initializeGameVariables();
+            this.initializeElements();
+            this.initializeEventListeners();
+            this.loadScoreHistory();
+            this.setupDifficultySelector();
+            
+            this.consecutiveCorrectAnswers = 0;
+            this.streakMultiplier = 1;
+            this.initializeStreakElements();
+        }
+
+        initializeStreakElements() {
+            const streakDisplay = document.createElement('div');
+            streakDisplay.id='streak-display';
+            streakDisplay.id = 'streak-item';
+            streakDisplay.textContent = 'Streak = 0';
+            
+        }
+
+        initializeGameVariables() {
+            this.state = GameState.IDLE;
+            this.difficulty = 'medium';
+            this.time = 60;
+            this.score = 0;
+            this.currentProblem = null;
+            this.gameTimer = null;
+            this.attempts = 0;
+            this.scoreHistory = [];
+            this.isMuted = false;
+        }
+
+        initializeElements() {
+            this.elements = {
+                problem: document.getElementById('problem'),
+                answerInput: document.getElementById('answer-input'),
+                timer: document.getElementById('timer'),
+                scoreDisplay: document.getElementById('score'),
+                feedback: document.getElementById('feedback'),
+                resetModal: document.getElementById('resetModal'),
+                scoreHistory: document.getElementById('score-history'),
+                scoreList: document.getElementById('score-list'),
+                muteButton: document.getElementById('mute-btn')
+            };
+
+            this.sounds = {
+                correct: document.getElementById('correctSound'),
+                incorrect: document.getElementById('incorrectSound'),
+                gameStart: document.getElementById('gameStartSound'),
+                gameEnd: document.getElementById('gameEndSound')
+            };
+
+            Object.values(this.sounds).forEach(sound => {
+                if (sound) sound.volume = 0.5;
+            });
+        }
+
+        initializeEventListeners() {
+            this.elements.answerInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter' && this.state === GameState.RUNNING) {
+                    this.checkAnswer();
+                }
+            });
+
+            this.elements.muteButton.addEventListener('click', this.toggleMute.bind(this));
+        }
+
+        setupDifficultySelector() {
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.difficulty = btn.dataset.difficulty;
                 });
-        
-                // Add event listeners
-                this.elements.answerInput.addEventListener('keypress', (event) => {
-                    if (event.key === 'Enter' && this.state === GameState.RUNNING) {
-                        this.checkAnswer();
-                    }
-                });
-        
-                // Mute button setup
-                if (this.elements.muteButton) {
-                    this.elements.muteButton.addEventListener('click', this.toggleMute);
-                }
-        
-                // Initial UI setup
-                this.updateUI();
-                this.renderScoreHistory();
+            });
+        }
+
+        toggleMute() {
+            this.isMuted = !this.isMuted;
+            Object.values(this.sounds).forEach(sound => {
+                if (sound) sound.muted = this.isMuted;
+            });
+            this.elements.muteButton.textContent = this.isMuted ? 'Unmute' : 'Mute';
+        }
+
+        startGame() {
+            if (this.state === GameState.RUNNING) {
+                this.showFeedback('Permainan sudah berjalan!', 'warning');
+                return;
             }
-        
-            // Toggle Mute
-            toggleMute() {
-                this.isMuted = !this.isMuted;
-                Object.values(this.sounds).forEach(sound => {
-                    if (sound) sound.muted = this.isMuted;
-                });
-        
-                // Update mute button UI
-                if (this.elements.muteButton) {
-                    this.elements.muteButton.textContent = this.isMuted ? 'Unmute' : 'Mute';
-                }
+
+            this.playSound('gameStart');
+            this.resetGameState();
+            this.state = GameState.RUNNING;
+            
+            // Set time based on difficulty
+            this.time = DIFFICULTY_CONFIG[this.difficulty].timeLimit;
+            
+            this.generateProblem();
+            this.startTimer();
+            this.clearFeedback();
+        }
+
+        generateProblem() {
+            if (this.state !== GameState.RUNNING) return;
+
+            const config = DIFFICULTY_CONFIG[this.difficulty];
+            const operation = config.operations[Math.floor(Math.random() * config.operations.length)];
+            
+            let num1, num2, result;
+            switch(operation) {
+                case '+':
+                    num1 = Math.floor(Math.random() * config.maxNumber) + 1;
+                    num2 = Math.floor(Math.random() * config.maxNumber) + 1;
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    num1 = Math.floor(Math.random() * config.maxNumber) + config.maxNumber / 2;
+                    num2 = Math.floor(Math.random() * num1) + 1;
+                    result = num1 - num2;
+                    break;
+                case 'x':
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    result = num1 * num2;
+                    break;
+                case '÷':
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    result = Math.floor(Math.random() * 10) + 1;
+                    num1 = num2 * result;
+                    break;
             }
-        
-            // Start Game Method
-            startGame() {
-                // Prevent starting if game is already running
-                if (this.state === GameState.RUNNING) {
-                    this.showFeedback('Permainan sudah berjalan!', 'warning');
-                    return;
-                }
-        
-                // Play start sound
-                this.playSound('gameStart');
-        
-                // Reset game state
-                this.resetGameState();
-        
-                // Start game
-                this.state = GameState.RUNNING;
-                this.generateProblem();
-                this.startTimer();
-        
-                // Clear previous feedback
-                this.clearFeedback();
+
+            this.currentProblem = {
+                problem: `${num1} ${operation} ${num2}`,
+                answer: result,
+                attempts: 0,
+                operation: operation
+            };
+
+            this.updateProblemDisplay();
+        }
+
+        checkAnswer() {
+            if (this.state !== GameState.RUNNING) return;
+
+            const userAnswer = parseInt(this.elements.answerInput.value);
+
+            if (isNaN(userAnswer)) {
+                this.showFeedback('Masukkan jawaban yang valid!', 'incorrect');
+                return;
             }
-        
-            // Reset Game State Method
-            resetGameState() {
-                // Stop existing timer
-                if (this.gameTimer) {
-                    clearInterval(this.gameTimer);
-                }
-        
-                // Reset all game parameters
-                this.time = GAME_CONFIG.INITIAL_TIME;
-                this.score = 0;
-                this.attempts = 0;
-                this.currentProblem = null;
-        
-                // Update UI
-                this.updateUI();
-            }
-        
-            // Generate Math Problem
-            generateProblem() {
-                if (this.state !== GameState.RUNNING) return;
-        
-                const operations = [
-                    {op: '+', name: 'Tambah'},
-                    {op: '-', name: 'Kurang'},
-                    {op: 'x', name: 'Kali'}
-                ];
-        
-                // Dynamic difficulty scaling
-                const difficulty = Math.floor(this.score / GAME_CONFIG.DIFFICULTY_SCALING) + 1;
-                const maxNumber = difficulty * 10;
-        
-                const operation = operations[Math.floor(Math.random() * operations.length)];
-                let num1, num2, result;
-        
-                switch(operation.op) {
-                    case '+':
-                        num1 = Math.floor(Math.random() * maxNumber) + 1;
-                        num2 = Math.floor(Math.random() * maxNumber) + 1;
-                        result = num1 + num2;
-                        break;
-                    case '-':
-                        num1 = Math.floor(Math.random() * maxNumber) + difficulty * 5;
-                        num2 = Math.floor(Math.random() * num1) + 1;
-                        result = num1 - num2;
-                        break;
-                    case 'x':
-                        num1 = Math.floor(Math.random() * (difficulty + 2)) + 1;
-                        num2 = Math.floor(Math.random() * (difficulty + 2)) + 1;
-                        result = num1 * num2;
-                        break;
-                }
-        
-                this.currentProblem = {
-                    problem: `${num1} ${operation.op} ${num2}`,
-                    answer: result,
-                    attempts: 0
-                };
-        
-                this.updateProblemDisplay();
-            }
-        
-            // Check User Answer
-            checkAnswer() {
-                if (this.state !== GameState.RUNNING) return;
-        
-                const userAnswer = parseInt(this.elements.answerInput.value);
-        
-                // Validate input
-                if (isNaN(userAnswer)) {
-                    this.showFeedback('Masukkan jawaban yang valid!', 'incorrect');
-                    return;
-                }
-        
-                // Increment attempts
-                this.currentProblem.attempts++;
-        
-                if (userAnswer === this.currentProblem.answer) {
-                    this.onCorrectAnswer();
-                } else {
-                    this.onIncorrectAnswer();
-                }
-            }
-        
-            // Correct Answer Handler
-            onCorrectAnswer() {
-                this.playSound('correct');
-                this.score++;
-                this.attempts = 0;
-                this.updateUI();
-                this.generateProblem();
-                this.clearFeedback();
-            }
-        
-            // Incorrect Answer Handler
-            onIncorrectAnswer() {
-                this.playSound('incorrect');
-        
-                if (this.currentProblem.attempts >= GAME_CONFIG.MAX_ATTEMPTS) {
-                    this.generateProblem();
-                    this.showFeedback(`Kesempatan habis! Jawaban yang benar: ${this.currentProblem.answer}`, 'incorrect');
-                } else {
-                    const remainingAttempts = GAME_CONFIG.MAX_ATTEMPTS - this.currentProblem.attempts;
-                    this.showFeedback(`Jawaban salah! Sisa kesempatan: ${remainingAttempts}`, 'warning');
-                }
-            }
-        
-            // Start Game Timer
-            startTimer() {
-                this.gameTimer = setInterval(() => {
-                    this.time--;
-                    this.updateTimerDisplay();
-        
-                    if (this.time <= 0) {
-                        this.endGame();
-                    }
-                }, 1000);
-            }
-        
-            // End Game Method
-            endGame() {
-                clearInterval(this.gameTimer);
-                this.state = GameState.ENDED;
-                
-                // Play game end sound
-                this.playSound('gameEnd');
-                
-                this.addScoreToHistory(this.score);
-                this.updateUI('end');
-                this.renderScoreHistory();
-            }
-        
-            // Update User Interface
-            updateUI(mode = 'normal') {
-                switch(mode) {
-                    case 'end':
-                        this.elements.problem.textContent = `Permainan Selesai! Skor: ${this.score}`;
-                        sounds.gameEnd.stop();
-                        break;
-                    default:
-                        this.elements.problem.textContent = this.currentProblem 
-                            ? `${this.currentProblem.problem} = ?`
-                            : '-';
-                }
-        
-                this.elements.timer.textContent = `Waktu: ${this.time}`;
-                this.elements.scoreDisplay.textContent = `Skor: ${this.score}`;
-                this.elements.answerInput.value = '';
-            }
-        
-            // Update Problem Display
-            updateProblemDisplay() {
-                this.elements.problem.textContent = `${this.currentProblem.problem} = ?`;
-            }
-        
-            // Update Timer Display
-            updateTimerDisplay() {
-                this.elements.timer.textContent = `Waktu: ${this.time}`;
-            }
-        
-            // Play Sound
-            playSound(type) {
-                const sound = this.sounds[type];
-                if (sound && !this.isMuted) {
-                    sound.currentTime = 0;
-                    sound.play();
-                }
-            }
-        
-            // Show Feedback Message
-            showFeedback(message, type = '') {
-                this.elements.feedback.textContent = message;
-                this.elements.feedback.className = type;
-                
-                setTimeout(() => this.clearFeedback(), 3000);
-            }
-        
-            // Clear Feedback
-            clearFeedback() {
-                this.elements.feedback.textContent = '';
-                this.elements.feedback.className = '';
-            }
-        
-            // Reset Game
-            resetGame() {
-                // Stop timer
-                if (this.gameTimer) {
-                    clearInterval(this.gameTimer);
-                }
-        
-                // Reset all game state
-                this.state = GameState.IDLE;
-                this.time = GAME_CONFIG.INITIAL_TIME;
-                this.score = 0;
-                this.attempts = 0;
-                this.currentProblem = null;
-        
-                // Update UI
-                this.updateUI();
-                this.showFeedback('Game direset. Tekan Mulai untuk memulai!', 'warning');
-            }
-        
-            // Add Score to History
-            addScoreToHistory(score) {
-                const entry = {
-                    id: Date.now(),
-                    date: new Date().toLocaleString(),
-                    score: score
-                };
-        
-                // Trim score history if it exceeds max length
-                if (this.scoreHistory.length >= GAME_CONFIG.MAX_SCORE_HISTORY) {
-                    this.scoreHistory.pop();
-                }
-        
-                this.scoreHistory.unshift(entry);
-                this.saveScoreHistory();
-                this.renderScoreHistory();
-            }
-        
-            // Render Score History
-            renderScoreHistory() {
-                if (!this.elements.scoreList) return;
-        
-                // Clear existing entries
-                this.elements.scoreList.innerHTML = '';
-        
-                // Render new entries
-                this.scoreHistory.forEach(entry => {
-                    const entryElement = document.createElement('div');
-                    entryElement.classList.add('score-entry');
-                    entryElement.innerHTML = `
-                        <span>${entry.date}</span>
-                        <span>${entry.score}</span>
-                    `;
-                    this.elements.scoreList.appendChild(entryElement);
-                });
-            }
-        
-            // Save Score History to LocalStorage
-            saveScoreHistory() {
-                localStorage.setItem('mathRushScores', JSON.stringify(this.scoreHistory));
-            }
-        
-            // Load Score History from LocalStorage
-            loadScoreHistory() {
-                const savedScores = JSON.parse(localStorage.getItem('mathRushScores')) || [];
-                this.scoreHistory = savedScores;
-                this.renderScoreHistory();
+
+            this.currentProblem.attempts++;
+
+            if (userAnswer === this.currentProblem.answer) {
+                this.onCorrectAnswer();
+            } else {
+                this.onIncorrectAnswer();
             }
         }
-        
-        // Instantiate Game on DOM Load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Create game instance
-            const mathRush = new MathRushGame();
-        
-            // Attach global functions to window for HTML onclick events
-            window.startGame = () => mathRush.startGame();
-            window.checkAnswer = () => mathRush.checkAnswer();
-            window.showResetModal = () => {
-                const modal = document.getElementById('resetModal');
-                modal.style.display = 'flex';
-                setTimeout(() => {
-                    modal.querySelector('.modal-container').classList.add('show');
-                }, 10);
+
+        onCorrectAnswer() {
+            this.playSound('correct');
+            this.score++;
+            this.attempts = 0;
+            this.updateUI();
+            this.generateProblem();
+            this.clearFeedback();
+        }
+
+        onIncorrectAnswer() {
+            this.playSound('incorrect');
+
+            if (this.currentProblem.attempts >= GAME_CONFIG.MAX_ATTEMPTS) {
+                const hint = this.generateHint();
+                this.showFeedback(`Kesempatan habis! Hint: ${hint}`, 'warning');
+                this.generateProblem();
+            } else {
+                const remainingAttempts = GAME_CONFIG.MAX_ATTEMPTS - this.currentProblem.attempts;
+                this.showFeedback(`Jawaban salah! Sisa kesempatan: ${remainingAttempts}`, 'warning');
+            }
+        }
+
+        generateHint() {
+            const prob = this.currentProblem;
+            switch(prob.operation) {
+                case '+': return `Tambahkan ${prob.problem.split(' + ')[0]} dan ${prob.problem.split(' + ')[1]}`;
+                case '-': return `Kurangkan ${prob.problem.split(' - ')[0]} dengan ${prob.problem.split(' - ')[1]}`;
+                case 'x': return `Kalikan ${prob.problem.split(' x ')[0]} dengan ${prob.problem.split(' x ')[1]}`;
+                case '÷': return `Bagi ${prob.problem.split(' ÷ ')[0]} dengan ${prob.problem.split(' ÷ ')[1]}`;
+            }
+        }
+
+        startTimer() {
+            this.gameTimer = setInterval(() => {
+                this.time--;
+                this.updateTimerDisplay();
+
+                if (this.time <= 0) {
+                    this.endGame();
+                }
+            }, 1000);
+        }
+
+        endGame() {
+            // Stop all game sounds
+            Object.values(this.sounds).forEach(sound => {
+                if (sound) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            });
+
+            // Play end game sound
+            this.playSound('gameEnd');
+            
+            clearInterval(this.gameTimer);
+            this.state = GameState.ENDED;
+            
+            this.addScoreToHistory(this.score);
+            this.updateUI('end');
+            this.renderScoreHistory();
+        }
+
+        updateUI(mode = 'normal') {
+            switch(mode) {
+                case 'end':
+                    this.elements.problem.textContent = `Permainan Selesai! 
+                    Skor: ${this.score}`;
+                    break;
+                default:
+                    this.elements.problem.textContent = this.currentProblem 
+                        ? `${this.currentProblem.problem} = ?`
+                        : '-';
+            }
+
+            this.elements.timer.textContent = `Waktu: ${this.time}`;
+            this.elements.scoreDisplay.textContent = `Skor: ${this.score}`;
+            this.elements.answerInput.value = '';
+        }
+
+        updateProblemDisplay() {
+            this.elements.problem.textContent = `${this.currentProblem.problem} = ?`;
+        }
+
+        updateTimerDisplay() {
+            this.elements.timer.textContent = `Waktu: ${this.time}`;
+        }
+
+        playSound(type) {
+            const sound = this.sounds[type];
+            if (sound && !this.isMuted) {
+                sound.currentTime = 0;
+                sound.play();
+            }
+        } 
+        showFeedback(message, type = '') {
+            this.elements.feedback.textContent = message;
+            this.elements.feedback.className = type;
+            
+            setTimeout(() => this.clearFeedback(), 3000);
+        }
+
+        clearFeedback() {
+            this.elements.feedback.textContent = '';
+            this.elements.feedback.className = '';
+        }
+
+        resetGame() {
+            if (this.gameTimer) {
+                clearInterval(this.gameTimer);
+            }
+
+            // Stop all sounds
+            Object.values(this.sounds).forEach(sound => {
+                if (sound) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            });
+
+            this.state = GameState.IDLE;
+            this.time = GAME_CONFIG.INITIAL_TIME;
+            this.score = 0;
+            this.attempts = 0;
+            this.currentProblem = null;
+
+            this.updateUI();
+            this.showFeedback('Game direset. Tekan Mulai untuk memulai!', 'warning');
+        }
+
+        addScoreToHistory(score) {
+            const entry = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                score: score,
+                difficulty: this.difficulty
             };
-            window.closeResetModal = () => {
-                const modal = document.getElementById('resetModal');
-                const modalContainer = modal.querySelector('.modal-container');
-                
-                modalContainer.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                }, 300);
-            };
-            window.confirmReset = () => {
-                mathRush.resetGame();
-                window.closeResetModal();
-            };
-            window.showScoreHistory = () => {
-                const scoreHistory = document.getElementById('score-history');
-                scoreHistory.style.display = scoreHistory.style.display === 'none' ? 'block' : 'none';
-            };
-        });
-        </script>
+
+            if (this.scoreHistory.length >= GAME_CONFIG.MAX_SCORE_HISTORY) {
+                this.scoreHistory.pop();
+            }
+
+            this.scoreHistory.unshift(entry);
+            this.saveScoreHistory();
+            this.renderScoreHistory();
+        }
+
+        renderScoreHistory() {
+            if (!this.elements.scoreList) return;
+
+            this.elements.scoreList.innerHTML = '';
+
+            this.scoreHistory.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.classList.add('score-entry');
+                entryElement.innerHTML = `
+                    <span>${entry.date}</span>
+                    <span>Skor: ${entry.score}</span>
+                    <span>Mode: ${entry.difficulty}</span>
+                `;
+                this.elements.scoreList.appendChild(entryElement);
+            });
+        }
+
+        saveScoreHistory() {
+            localStorage.setItem('mathRushScores', JSON.stringify(this.scoreHistory));
+        }
+
+        loadScoreHistory() {
+            const savedScores = JSON.parse(localStorage.getItem('mathRushScores')) || [];
+            this.scoreHistory = savedScores;
+            this.renderScoreHistory();
+        }
+
+        clearScoreHistory() {
+            this.scoreHistory = [];
+            localStorage.removeItem('mathRushScores');
+            this.renderScoreHistory();
+            this.showFeedback('Riwayat skor telah dihapus!', 'warning');
+        }
+
+        resetGameState() {
+            this.score = 0;
+            this.time = DIFFICULTY_CONFIG[this.difficulty].timeLimit;
+            this.attempts = 0;
+            this.currentProblem = null;
+        }
+    }
+
+    // Instantiate Game on DOM Load
+    document.addEventListener('DOMContentLoaded', () => {
+        const mathRush = new MathRushGame();
+
+        // Global functions for HTML event handlers
+        window.startGame = () => mathRush.startGame();
+        window.checkAnswer = () => mathRush.checkAnswer();
+        window.showResetModal = () => {
+            const modal = document.getElementById('resetModal');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.querySelector('.modal-container').classList.add('show');
+            }, 10);
+        };
+        window.closeResetModal = () => {
+            const modal = document.getElementById('resetModal');
+            const modalContainer = modal.querySelector('.modal-container');
+            
+            modalContainer.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        };
+        window.confirmReset = () => {
+            mathRush.resetGame();
+            window.closeResetModal();
+        };
+        window.showScoreHistory = () => {
+            const scoreHistory = document.getElementById('score-history');
+            scoreHistory.style.display = scoreHistory.style.display === 'none' ? 'block' : 'none';
+        };
+        window.clearScoreHistory = () => {
+            mathRush.clearScoreHistory();
+        };
+    });
+    </script>
+</body>
+</html>
